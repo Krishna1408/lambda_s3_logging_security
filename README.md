@@ -17,4 +17,7 @@ B. The second lambda "s3_logging.py" will:
    "region_name_store_s3_logs" : "Region where you want to create new s3 buket",
    "s3_bucket_log_enable_list":["list of s3 buckets where logging should be enabled"]
   ```
-  
+   ## Resources Created:
+ 
+     S3 bucket is created by name: bucket_prefix-account_number-region_name
+     
