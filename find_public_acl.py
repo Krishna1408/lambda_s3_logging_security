@@ -9,11 +9,9 @@ def lambda_handler(event, context):
 
 class CheckACL:
     def __init__(self):
-        self.s3_client = boto3.client('s3', aws_access_key_id="AKIAIVOKZMRWBARZGX2A",
-                                      aws_secret_access_key="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",
+        self.s3_client = boto3.client('s3'
                                       )
-        self.s3_resource = boto3.resource('s3', aws_access_key_id="AKIAIVOKZMRWBARZGX2A",
-                                          aws_secret_access_key="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",
+        self.s3_resource = boto3.resource('s3'
                                           )
 
     def check_grant_buckets(self):
