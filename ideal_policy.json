@@ -1,0 +1,134 @@
+{
+  "s3_bucket_name": "cloudtrail",
+  "region_name" : "eu-central-1",
+  "account_number" : "388376138984",
+  "s3_bucket_log_name" : "store-logs",
+  "region_name_store_s3_logs" : "eu-central-1",
+  "s3_bucket_log_enable_list":["cloudtrail-388376138984-eu-central-1"],
+  "s3_bucket_log_disable_list":[],
+  "kms_policy" : {
+  "Version": "2012-10-17",
+  "Id": "Key policy created by CloudTrail",
+  "Statement": [
+    {
+      "Sid": "Enable IAM User Permissions",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": [
+          "arn:aws:iam::388376138984:user/krishnakumar.sharma@sap.com",
+          "arn:aws:iam::388376138984:root"
+        ]
+      },
+      "Action": "kms:*",
+      "Resource": "*"
+    },
+    {
+      "Sid": "Allow CloudTrail to encrypt logs",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "cloudtrail.amazonaws.com"
+      },
+      "Action": "kms:GenerateDataKey*",
+      "Resource": "*",
+      "Condition": {
+        "StringLike": {
+          "kms:EncryptionContext:aws:cloudtrail:arn": "arn:aws:cloudtrail:*:388376138984:trail/*"
+        }
+      }
+    },
+    {
+      "Sid": "Allow CloudTrail to describe key",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "cloudtrail.amazonaws.com"
+      },
+      "Action": "kms:DescribeKey",
+      "Resource": "*"
+    },
+    {
+      "Sid": "Allow principals in the account to decrypt log files",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "*"
+      },
+      "Action": [
+        "kms:Decrypt",
+        "kms:ReEncryptFrom"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "kms:CallerAccount": "388376138984"
+        },
+        "StringLike": {
+          "kms:EncryptionContext:aws:cloudtrail:arn": "arn:aws:cloudtrail:*:388376138984:trail/*"
+        }
+      }
+    },
+    {
+      "Sid": "Allow alias creation during setup",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "*"
+      },
+      "Action": "kms:CreateAlias",
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "kms:ViaService": "ec2.eu-central-1.amazonaws.com",
+          "kms:CallerAccount": "388376138984"
+        }
+      }
+    },
+    {
+      "Sid": "Enable cross account log decryption",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "*"
+      },
+      "Action": [
+        "kms:Decrypt",
+        "kms:ReEncryptFrom"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "kms:CallerAccount": "388376138984"
+        },
+        "StringLike": {
+          "kms:EncryptionContext:aws:cloudtrail:arn": "arn:aws:cloudtrail:*:388376138984:trail/*"
+        }
+      }
+    }
+  ]
+},
+  "trail_policy" : {
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AWSCloudTrailAclCheck20150319",
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "cloudtrail.amazonaws.com"
+            },
+            "Action": "s3:GetBucketAcl",
+            "Resource": "arn:aws:s3:::cloudtrail-388376138984-eu-central-1"
+        },
+        {
+            "Sid": "AWSCloudTrailWrite20150319",
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "cloudtrail.amazonaws.com"
+            },
+            "Action": "s3:PutObject",
+            "Resource": "arn:aws:s3:::cloudtrail-388376138984-eu-central-1/AWSLogs/388376138984/*",
+            "Condition": {
+                "StringEquals": {
+                    "s3:x-amz-acl": "bucket-owner-full-control"
+                }
+            }
+        }
+    ]
+}
+
+}
